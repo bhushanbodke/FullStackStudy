@@ -41,18 +41,14 @@ app.delete("/api/persons/:id", (req, res) => {
 });
 
 app.post("/api/persons", (req, res) => {
-  let maxId = Math.max(...entries.map((i) => i.id));
-  let [name, number] = [req.body.name, req.body.number];
-  if (entries.find((i) => i.name === name)) {
-    res.json({ error: "already contains someone with name " });
-  }
-  let new_person = {
-    id: maxId + 1,
-    name: name,
-    number: number,
-  };
-  entries = entries.concat(new_person);
-  res.json(new_person);
+  let [content, imp] = [req.body.content, req.body.imp];
+  let entry = new Note({
+    content: content,
+    important: imp,
+  });
+  entry.save().then(() => {
+    res.send("note saved");
+  });
 });
 
 app.listen(process.env.PORT, () =>
