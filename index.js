@@ -1,31 +1,10 @@
-let entries = [
-  {
-    id: 1,
-    name: "Arto Hellas",
-    number: "040-123456",
-  },
-  {
-    id: 2,
-    name: "Ada Lovelace",
-    number: "39-44-5323523",
-  },
-  {
-    id: 3,
-    name: "Dan Abramov",
-    number: "12-43-234345",
-  },
-  {
-    id: 4,
-    name: "Mary Poppendieck",
-    number: "39-23-6423122",
-  },
-];
+require("dotenv").config();
 
 let morgan = require("morgan");
 let express = require("express");
 let cors = require("cors");
-
 let app = express();
+let Note = require("./Note");
 
 app.use(express.json());
 app.use(morgan("tiny"));
@@ -33,7 +12,7 @@ app.use(cors());
 app.use(express.static("dist"));
 
 app.get("/api/persons", (req, res) => {
-  res.json(entries);
+  Note.find({}).then((data) => res.json(data));
 });
 
 app.get("/info", (req, res) => {
@@ -76,4 +55,8 @@ app.post("/api/persons", (req, res) => {
   res.json(new_person);
 });
 
-app.listen(3001);
+app.listen(process.env.PORT, () =>
+  console.log(
+    "----------------------server started on port 3001 ----------------"
+  )
+);
